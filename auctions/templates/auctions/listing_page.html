@@ -1,0 +1,44 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+Listing Page
+{% endblock %}
+
+{% block body %}
+    <h2>Listing Page</h2>
+    <div> {{ listing.title }} </div>
+    <div> {{ listing.description }}</div>
+    <div> Posted: {{ listing.date }}</div>
+    <div> Seller: {{ listing.seller }}</div>
+    <div> Category: {{ listing.category }}</div>
+    
+    <form action="{% url 'listing_page' listing.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="bid_form">
+        <label>Bid</label>
+        <input type="number" value="{{ listing.min_bid }}">
+        <input type="submit">
+    </form>
+    {% if watched_listing %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="watchlist_form_remove">
+        <input type="submit" value="Remove from watchlist">
+    </form>
+    {% else %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="watchlist_form_add">
+        <input type="submit" value="Add to watchlist">
+    </form>
+    {% endif %}
+    <form action="{% url 'listing_page' listing.id %}" method="post">
+        {% csrf_token %}
+        {{ comment_f }}
+        <input type="hidden" name="form_type" value="comment_form">
+        <input type="submit" value="Post">
+    </form>
+    
+
+    
+{% endblock %}

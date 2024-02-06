@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.db.models import Max
 from auctions.forms import *
 
 from .models import User, Listing
@@ -98,9 +99,31 @@ def listing_page(request, listing_id):
     listing1 = Listing.objects.filter(pk=listing_id)
     listing = listing1.first()
     
-    
+    # Make a bid
     if request.POST.get("form_type") == "bid_form":
-        return HttpResponse("bid_form")
+        
+        # Get bid from post
+        try: 
+            bid = int(request.POST.get("new_bid"))
+        except ValueError: 
+            return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
+
+        # Show last bid. If there's no prior one, set first to 0.
+        price = Bids.objects.filter(listing_id=listing_id)
+        if price:
+            price = Bids.objects.filter(listing_id=listing_id).last()
+        else:
+            price = Bids(amount='0', bidder=user, listing_id=listing)
+
+        # Save if bid is larger or equal to min bid, and larger than prior bid.
+        if bid >= listing.min_bid and bid > int(price.amount):
+            bid = Bids(amount=bid, bidder=user, listing_id=listing)
+            bid.save()
+        else:
+            return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
+
+        return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
+        
     
     # Add to a watchlist
     if request.POST.get("form_type") == "watchlist_form_add":
@@ -129,12 +152,14 @@ def listing_page(request, listing_id):
     else:
         watched_listing = False
     
+    price = Bids.objects.filter(listing_id=listing_id).last()
 
     return render(request, "auctions/listing_page.html", {
         "listing": listing,
         "comment_f": CommentsForm(),
         "watched_listing": watched_listing,
-        "comments": Comments.objects.filter(listing_id=listing_id)
+        "comments": Comments.objects.filter(listing_id=listing_id),
+        "price": price
     })
 
 

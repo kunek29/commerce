@@ -11,13 +11,20 @@ Listing Page
     <div> Posted: {{ listing.date }}</div>
     <div> Seller: {{ listing.seller }}</div>
     <div> Category: {{ listing.category }}</div>
+    <div> Minimum price: {{ listing.min_bid }}</div>
+    {% if price %}
+    <div> Current Price: {{ price.amount }}$</div>
+    {% else %}
+    <div> Current Price: No offers yet</div>
+    
+    {% endif %}
     
     <form action="{% url 'listing_page' listing.id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="form_type" value="bid_form">
         <label>Bid</label>
-        <input type="number" value="{{ listing.min_bid }}">
-        <input type="submit">
+        <input type="number" name="new_bid">
+        <input type="submit" value="Place Bid">
     </form>
     {% if watched_listing %}
     <form method="post">

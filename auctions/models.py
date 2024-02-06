@@ -2,14 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-CATEGORY_CHOICES = {
-    "APPLIANCES": "Appliances",
-    "CELL PHONES": "Cell Phones",
-    "ELECTRONICS": "Electronics",
-    "TOYS": "Toys"
-}
-
-
 class User(AbstractUser):
     pass
 
@@ -23,12 +15,13 @@ class Categories(models.Model):
 
 class Listing(models.Model):
     title = models.CharField(max_length=64)
-    description = models.TextField()
+    description = models.TextField(max_length=1024)
     date = models.DateTimeField(auto_now_add=True)
     image_url = models.URLField(max_length = 256, blank=True)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "listing_seller")
-    min_bid = models.FloatField(max_length=10)
+    min_bid = models.DecimalField(max_digits=12, decimal_places=2)
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, related_name = "listing_category")
+    status = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.id}: {self.title}, {self.description}, {self.date}, {self.image_url}, {self.seller}, {self.min_bid}, {self.category}"
@@ -36,7 +29,7 @@ class Listing(models.Model):
     
 
 class Bids(models.Model):
-    amount = models.IntegerField()
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids_user")
     listing_id = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name = "listing_bid")
 
@@ -45,7 +38,7 @@ class Bids(models.Model):
 
 
 class Comments(models.Model):
-    comment = models.TextField(max_length=300)
+    comment = models.TextField(max_length=256)
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_user")
     listing_id = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listing_comment")
@@ -60,3 +53,4 @@ class Watchlist(models.Model):
 
     def __str__(self):
         return f"{self.id}: {self.user}, {self.listing_id}"
+    

@@ -6,52 +6,72 @@ Listing Page
 
 {% block body %}
     <h2>Listing Page</h2>
+    
+    {% if listing.status == False and user == price.bidder %}
+        <div>Congratulations, You won!</div>
+    {% elif listing.status == False and user != price.bidder %}
+        <div>Auction closed!</div>
+    {% endif %}
+    
+    {% if user == listing.seller and listing.status == True %}
+        <form action="{% url 'listing_page' listing.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="close_form">
+            <input type="submit" value="Close Auction">
+        </form>
+    {% endif %}
+    
     <div> {{ listing.title }} </div>
+    <div><img src="{{ listing.image_url }}"></div>
     <div> {{ listing.description }}</div>
     <div> Posted: {{ listing.date }}</div>
     <div> Seller: {{ listing.seller }}</div>
     <div> Category: {{ listing.category }}</div>
-    <div> Minimum price: {{ listing.min_bid }}</div>
-    {% if price %}
-    <div> Current Price: {{ price.amount }}$</div>
-    {% else %}
-    <div> Current Price: No offers yet</div>
     
+    {% if price and listing.status == True %}
+        <div> Current Price: {{ price.amount }}$</div>
+    {% elif price and listing.status == False %}
+        <div>Sold for: {{ price.amount }}$</div>
+    {% else %}
+        <div> Minimum price: {{ listing.min_bid }}</div>
+        <div> Current Price: No offers yet</div>
     {% endif %}
     
-    <form action="{% url 'listing_page' listing.id %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="form_type" value="bid_form">
-        <label>Bid</label>
-        <input type="number" name="new_bid">
-        <input type="submit" value="Place Bid">
-    </form>
-    {% if watched_listing %}
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="form_type" value="watchlist_form_remove">
-        <input type="submit" value="Remove from watchlist">
-    </form>
-    {% else %}
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="form_type" value="watchlist_form_add">
-        <input type="submit" value="Add to watchlist">
-    </form>
-    {% endif %}
-    <form action="{% url 'listing_page' listing.id %}" method="post">
-        {% csrf_token %}
-        {{ comment_f }}
-        <input type="hidden" name="form_type" value="comment_form">
-        <input type="submit" value="Post">
-    </form>
-
+    {% if user.is_authenticated and listing.status == True %}
+        <form action="{% url 'listing_page' listing.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="bid_form">
+            <label>Bid</label>
+            <input type="number" step="0.01" name="new_bid">
+            <input type="submit" value="Place Bid">
+        </form>
+        {% if watched_listing %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="watchlist_form_remove">
+            <input type="submit" value="Remove from watchlist">
+        </form>
+        {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="watchlist_form_add">
+            <input type="submit" value="Add to watchlist">
+        </form>
+        {% endif %}
+        <form action="{% url 'listing_page' listing.id %}" method="post">
+            {% csrf_token %}
+            {{ comment_f }}
+            <input type="hidden" name="form_type" value="comment_form">
+            <input type="submit" value="Post">
+        </form>
+    {% elif not user.is_authenticated and listing.status == True %}
+        <div>Log In to Bid or Comment!</div>
+    
+    {% endif %}   
     {% for comment in comments %}
-    <div>{{ comment.user }}</div>
-    <div>{{ comment.date }}</div>
-    <div>{{ comment.comment }}</div>
+        <div>{{ comment.user }}</div>
+        <div>{{ comment.date }}</div>
+        <div>{{ comment.comment }}</div>
     {% endfor %}
-    
-
     
 {% endblock %}

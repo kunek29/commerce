@@ -11,7 +11,7 @@ from .models import User, Listing
 
 
 def index(request):
-    listings = Listing.objects.all()
+    listings = Listing.objects.filter(status=True)
     return render(request, "auctions/index.html", {
         "listings": listings
     })
@@ -99,16 +99,26 @@ def listing_page(request, listing_id):
     listing1 = Listing.objects.filter(pk=listing_id)
     listing = listing1.first()
     
+    if request.POST.get("form_type") == "close_form":
+        listing.status = False
+        listing.save()
+
+        return render(request, "auctions/listing_page.html", {
+            "listing": listing,
+            "comments": Comments.objects.filter(listing_id=listing_id),
+            "price": Bids.objects.filter(listing_id=listing_id).last()
+        })
+
     # Make a bid
     if request.POST.get("form_type") == "bid_form":
         
         # Get bid from post
         try: 
-            bid = int(request.POST.get("new_bid"))
+            bid = float(request.POST.get("new_bid"))
         except ValueError: 
             return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
 
-        # Show last bid. If there's no prior one, set first to 0.
+        # Get last bid. If there's no prior one, set first to 0.
         price = Bids.objects.filter(listing_id=listing_id)
         if price:
             price = Bids.objects.filter(listing_id=listing_id).last()
@@ -116,20 +126,25 @@ def listing_page(request, listing_id):
             price = Bids(amount='0', bidder=user, listing_id=listing)
 
         # Save if bid is larger or equal to min bid, and larger than prior bid.
-        if bid >= listing.min_bid and bid > int(price.amount):
+        if bid >= listing.min_bid and bid > float(price.amount):
+            listing.min_bid = bid
+            listing.save()
             bid = Bids(amount=bid, bidder=user, listing_id=listing)
             bid.save()
+            
         else:
             return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
 
         return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
         
-    
     # Add to a watchlist
     if request.POST.get("form_type") == "watchlist_form_add":
-        w = Watchlist(user=user)
-        w.save()
-        w.listing_id.add(listing)
+        try:
+            w = Watchlist(user=user)
+            w.save()
+            w.listing_id.add(listing)
+        except ValueError:
+            return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
 
     # Remove from a watchlist
     if request.POST.get("form_type") == "watchlist_form_remove":
@@ -145,21 +160,18 @@ def listing_page(request, listing_id):
         return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
     
     # Check if listing is already in a watchlist
-    w_listings = Listing.objects.filter(watchlist_listing__listing_id=listing_id, watchlist_listing__user=user)
-    
+    w_listings = Listing.objects.filter(watchlist_listing__listing_id=listing_id, watchlist_listing__user=user.id)
     if listing in w_listings:
         watched_listing = True
     else:
         watched_listing = False
     
-    price = Bids.objects.filter(listing_id=listing_id).last()
-
     return render(request, "auctions/listing_page.html", {
         "listing": listing,
         "comment_f": CommentsForm(),
         "watched_listing": watched_listing,
         "comments": Comments.objects.filter(listing_id=listing_id),
-        "price": price
+        "price": Bids.objects.filter(listing_id=listing_id).last()
     })
 
 
@@ -186,7 +198,7 @@ def categories(request):
 
 
 def category_listings(request, category):
-    listings = Listing.objects.filter(category=category)
+    listings = Listing.objects.filter(category=category, status=True)
     category_name = Categories.objects.get(pk=category)
     return render(request, "auctions/category_listings.html", {
         "listings": listings,

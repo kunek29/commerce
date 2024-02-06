@@ -7,9 +7,11 @@
     <a href="{% url 'listing_page' listing.id %}">
     <div class="listing_box">
         <div><img src="{{ listing.image_url }}"></div>
-        <div> {{ listing.title}}</div>
-        <div> {{ listing.min_bid }}$</div>
-    
+        <div>
+            <div id="index_listings_title"> {{ listing.title}}</div>
+            <div id="index_listings_price"> Price: ${{ listing.min_bid }}</div>
+            <div id="index_listings_description">{{ listing.description }}</div>
+        </div>
     </div>
     </a>
     {% endfor %}

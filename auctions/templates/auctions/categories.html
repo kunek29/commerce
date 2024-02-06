@@ -8,6 +8,6 @@ Categories
     <h2>Categories</h2>
     <ul>
     {% for category in categories %}
-        <li>{{ category.category_list }}</li>
+        <a href="{% url 'category_listings' category.id %}"><li>{{ category.category_list }}</li></a>
     {% endfor %}
 {% endblock %}

@@ -38,6 +38,12 @@ Listing Page
         <input type="hidden" name="form_type" value="comment_form">
         <input type="submit" value="Post">
     </form>
+
+    {% for comment in comments %}
+    <div>{{ comment.user }}</div>
+    <div>{{ comment.date }}</div>
+    <div>{{ comment.comment }}</div>
+    {% endfor %}
     
 
     

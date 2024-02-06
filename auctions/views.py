@@ -95,8 +95,8 @@ def listing_page(request, listing_id):
     user = request.user
 
     # Get listing
-    listing = Listing.objects.filter(pk=listing_id)
-    listing = listing.first()
+    listing1 = Listing.objects.filter(pk=listing_id)
+    listing = listing1.first()
     
     
     if request.POST.get("form_type") == "bid_form":
@@ -113,8 +113,13 @@ def listing_page(request, listing_id):
         w = Watchlist.objects.filter(listing_id=listing.id, user=user)
         w.delete()
 
+    # Add a comment
     if request.POST.get("form_type") == "comment_form":
-        return HttpResponse("comment_form")
+        comment = Comments(user=user, listing_id=listing)
+        f = CommentsForm(request.POST, instance=comment)
+        if f.is_valid():
+            f.save()
+        return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
     
     # Check if listing is already in a watchlist
     w_listings = Listing.objects.filter(watchlist_listing__listing_id=listing_id, watchlist_listing__user=user)
@@ -128,17 +133,21 @@ def listing_page(request, listing_id):
     return render(request, "auctions/listing_page.html", {
         "listing": listing,
         "comment_f": CommentsForm(),
-        "watched_listing": watched_listing
+        "watched_listing": watched_listing,
+        "comments": Comments.objects.filter(listing_id=listing_id)
     })
 
 
 @login_required
 def watchlist(request):
+
+    # Get user
     user = request.user
 
     # Get listings from the user's watchlist
     listings = Listing.objects.filter(watchlist_listing__user=user)
     
+    # Render user's watched listings
     return render(request, "auctions/watchlist.html",{
         "listings": listings
     })
@@ -148,6 +157,14 @@ def categories(request):
     categories = Categories.objects.all()
     return render(request, "auctions/categories.html",{
         "categories": categories
+    })
 
+
+def category_listings(request, category):
+    listings = Listing.objects.filter(category=category)
+    category_name = Categories.objects.get(pk=category)
+    return render(request, "auctions/category_listings.html", {
+        "listings": listings,
+        "category": category_name
     })
   

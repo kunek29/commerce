@@ -3,11 +3,6 @@ body {
     font-family: sans-serif;
 }
 
-img {
-    height: 250px;
-    width: auto;
-}
-
 a {
     color: black;   
 }
@@ -16,8 +11,19 @@ a:hover {
     color: grey;
 }
 
+img {
+    height: 200px;
+    object-fit: contain;
+}
+
+label {
+    width: 200px;
+}
+
 .listing_box {
     display: flex;
+    justify-content: space-evenly;
+    gap: 1em;
     border-style: solid;
     border-color: lightgray;
     border-width: 1px;
@@ -25,20 +31,101 @@ a:hover {
     margin-bottom: 1em;
 }
 
-.listing_box > div { 
-    height: 250px;
-    width: 50%;
+.listing_box:hover {
+    border-style: groove;
+}
+
+
+.listing_box > div {  
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    flex-basis: auto;
+    flex-grow: 1;
+    width: 200px;
 }
 
-#index_listings_title {
+
+#index_listing_title {
     font-size: larger;
     font-weight: bolder;
 }
 
+#index_listing_date {
+    color: grey;
+}
+
+#index_listing_description {
+    color: grey;
+}
+
+.listing-page-top-container {
+    display: flex;
+    justify-content:space-around
+}
+
+.listing-page-top-container-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.watchlist-button {
+    color: white;
+    font-weight: lighter;
+    background-color: rgb(8, 106, 55);
+    border-radius: 10px;
+    padding-left: 5px;
+}
+
+.listing-details-container {
+    display: flex;
+    padding: 2em;
+    gap: 2em;
+}
+
+.table-right-column,
+.table-left-column {
+    padding-right: 1em;
+    padding-bottom: 1em;
+}
 
 
+.listing-details {
+    padding-left: 2em;
+    padding-top: 2em;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+.listing-comments {
+    padding-left: 2em;
+    padding-bottom: 1em;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+#listing-description {
+    font-style: italic;
+}
+
+.listing-comments-container {
+    padding-bottom: 1em;
+    padding-left: 2em;
+}
+
+.close-auction,
+.comments-form {
+    padding-left: 2em;
+    padding-bottom: 1em;
+}
+
+.comment-info {
+    color: grey;
+}
+
+.comment {
+    font-style: italic;
+}
 
 

@@ -21,7 +21,8 @@ class CommentsForm(ModelForm):
         widgets = {"comment": Textarea(attrs={
             "cols": 60, 
             "rows": 2,
-            "placeholder": "Comment here"})}
+            "placeholder": "Comment here",
+            "id": "comment-input"})}
         labels = {"comment": ''}
 
 

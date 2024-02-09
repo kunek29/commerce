@@ -5,45 +5,44 @@ Listing Page
 {% endblock %}
 
 {% block body %}
-    
+<div class="body">  
     {% if listing.status == False and user == price.bidder %}
         <h2>Congratulations, You won!</div>
     {% elif listing.status == False and user != price.bidder %}
         <h2>Auction closed!</div>
     {% endif %}
     
-    {% if user == listing.seller and listing.status == True %}
-        <form class="close-auction" action="{% url 'listing_page' listing.id %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="form_type" value="close_form">
-            <input type="submit" value="Close Auction">
-        </form>
-    {% endif %}
-    
     <div class="listing-page-top-container">
         <div class="listing-page-top-container-left">
-            <img src="{{ listing.image_url }}">
+            <img id="listing-image" src="{{ listing.image_url }}" alt="listing_image">
         </div>
         <div class="listing-page-top-container-right">
-            <h2>{{ listing.title }}</h2>
-            <div> Posted: {{ listing.date }}</div>
+            <h2>{{ listing.title }}</h2>        
     
             {% if price and listing.status == True %}
-                <div> Current Price: <strong>{{ price.amount }}$</strong></div>
+                <div class="larger"> Current Price: <strong>${{ price.amount }}</strong></div>
             {% elif price and listing.status == False %}
-                <div>Sold for: {{ price.amount }}$</div>
+                <div class="larger">Sold for: <strong>${{ price.amount }}</strong></div>
             {% else %}
-                <div> Minimum price: {{ listing.min_bid }}</div>
-                <div> Current Price: No offers yet</div>
+                <div class="larger"> Minimum price: <strong>${{ listing.min_bid }}</strong></div>
+                <div class="larger"> Current Price: No offers yet</div>
             {% endif %}
 
             {% if user.is_authenticated and listing.status == True %}
+                {% if user == listing.seller and listing.status == True %}
+                <form class="close-auction" action="{% url 'listing_page' listing.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="close_form">
+                    <input class="bid-button" type="submit" value="Close Auction">
+                </form>
+                {% else %}
                 <form action="{% url 'listing_page' listing.id %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="form_type" value="bid_form">
-                    <input type="number" step="0.01" name="new_bid" placeholder="Enter amount">
-                    <input type="submit" value="Place Bid">
+                    <input id="bid-input" type="number" step="0.01" name="new_bid" placeholder="Enter amount">
+                    <input type="submit" class="bid-button" value="Place Bid">
                 </form>
+                {% endif %}
                 {% if watched_listing %}
                 <form method="post">
                     {% csrf_token %}
@@ -59,42 +58,48 @@ Listing Page
                 {% endif %}
     
             {% elif not user.is_authenticated and listing.status == True %}
-                <div>Log In to Bid or Comment!</div>
+                <div class="larger-pink">Log In to Bid or Comment!</div>
             {% endif %}
         </div>
     </div>
-    <div class="listing-details">Listing details</div>
-    <table class="listing-details-container">   
-        <tr class="listing-details-container-row">
-            <td class="table-left-column">Description:</td>
-            <td class="table-right-column" id="listing-description">{{ listing.description }}</td>
-        <tr class="listing-details-container-row">
-            <td class="table-left-column">Posted by:</td>
-            <td class="table-right-column">{{ listing.seller }}</td>
-        </tr>
-        <tr class="listing-details-container-row">
-            <td class="table-left-column">Category:</td> 
-            <td class="table-right-column">{{ listing.category }}</td>
-        </tr>
-    </table>
+    <div class="listing-details" id="bolder">Details
+        <table id="listing-details-container">  
+            <tr class="listing-details-container-row">
+                <td class="table-left-column">Description:</td>
+                <td class="table-right-column" id="listing-description">{{ listing.description }}</td>
+            </tr>
+            <tr class="listing-details-container-row">
+                <td class="table-left-column">Posted:</td>
+                <td class="table-right-column">{{ listing.date }}</td>
+            </tr>
+            <tr class="listing-details-container-row">
+                <td class="table-left-column">Seller:</td>
+                <td class="table-right-column">{{ listing.seller }}</td>
+            </tr>
+            <tr class="listing-details-container-row">
+                <td class="table-left-column">Category:</td> 
+                <td class="table-right-column">{{ listing.category }}</td>
+            </tr>
+        </table>
+    </div>  
 
-    <div class="listing-comments">Comments</div>
-    
+    <div class="listing-comments">Comments
         {% for comment in comments %}
             <div class="listing-comments-container">
-                <div class="comment-info">User: {{ comment.user }}</div>
-                <div class="comment-info">{{ comment.date }}</div>
+                <div class="grey">User: {{ comment.user }}</div>
+                <div class="grey">{{ comment.date }}</div>
                 <div class="comment">{{ comment.comment }}</div>
             </div> 
         {% endfor %}
-     
+    
         {% if user.is_authenticated and listing.status == True %}
             <form class="comments-form" action="{% url 'listing_page' listing.id %}" method="post">
                 {% csrf_token %}
                 {{ comment_f }}
-                <input type="hidden" name="form_type" value="comment_form">
-                <input type="submit" value="Post">
+                <input id="comment-input" type="hidden" name="form_type" value="comment_form">
+                <input class="watchlist-button" type="submit" value="Post">
             </form>
         {% endif %}
-    
+    </div>
+</div>     
 {% endblock %}

@@ -6,13 +6,15 @@ Create Listing
 
 {% block body %}
 <div class="body">
-    <div class="title-container">Create Listing</div>
-    <div class="primary-container" id="add-listing">
-        <form action="{% url 'add_listing' %}" method="post">
-            {% csrf_token %}
-            {{ form }}
-            <input class="watchlist-button" type="submit">
-        </form>
+    <div class="wrapper">
+        <div class="title-container">Create Listing</div>
+        <div class="primary-container" id="add-listing">
+            <form action="{% url 'add_listing' %}" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input class="watchlist-button" type="submit">
+            </form>
+        </div>
     </div>
 </div>
 

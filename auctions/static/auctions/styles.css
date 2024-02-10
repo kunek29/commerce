@@ -2,38 +2,37 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.title {
-    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    background-color: white;
-    color: #467599;
-    padding: 10px 20px 10px 20px;
+footer {
+    display: flex;
+    justify-content: space-around;
+    padding: 1em;
+    color: grey;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 10px 10px 10px;
- }
+.wrapper {
+    max-width: 960px;
+    margin-inline: auto;
+}
 
+.title {
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    padding: 10px 20px 0px 20px;
+}
 
 .body {
     padding: 10px;
-    background-color: #9ED8DB;
+    background-color: #d7f5f7;
 }   
 
-.nav-end {
-    display: flex;
-    justify-content: end;
-    padding-top: 8px;
-    padding-right: 10px;
-}
-
 a {
-    color: black;   
+    color: black;  
+    text-decoration: none; 
 }
 
-a:hover {
-    color: grey;
+a:hover,
+.nav-link:hover {
+    color: #D64045;
+    text-decoration: none;
 }
 
 label {
@@ -43,9 +42,8 @@ label {
 .grid {
     display: grid;
     grid-template-columns: 
-        repeat(auto-fit, minmax(250px, 1fr));
+        repeat(auto-fit, minmax(255px, 1fr));
 }
-
 
 .title-container {
     font-size: 18px;
@@ -55,7 +53,6 @@ label {
     padding: 1em;
     background-color: rgb(253, 253, 253);
 }
-
 
 .primary-container {
     margin: 1em; 
@@ -78,12 +75,12 @@ label {
     flex-direction: column;
     justify-content: space-between;
     height: 380px;
-    max-width: 250px;
-    padding: 0em;
+    max-width: 285px;
+    padding: 0 0 10px 0;
 }
 
-.product:hover {
-    border: #563440 solid 2px;
+#product:hover {
+    border: #D64045 solid 1px;
 }
 
 #product-image {
@@ -93,30 +90,16 @@ label {
 }
 
 #product-title,
-#product-price
- {
+#product-description,
+#product-price {
+    text-align: center;
     align-self: center;
     padding-left: 10px;
-    padding-right: 10px;
-    
-}
-
-#product-description {
-    padding-left: 10px;
-    
-}
-
-#product-price {
-    padding-bottom: 10px;
+    padding-right: 10px;   
 }
 
 .grey {
     color: grey;
-}
-
-.larger-pink {
-    font-size: larger; 
-    color: rgb(103, 1, 1);
 }
 
 .larger {
@@ -154,31 +137,28 @@ label {
     padding: 5px;
     padding-left: 10px;
     padding-right: 10px;
+    min-width: 0;
 }
+
 
 .input:hover {
     border: #D64045 solid 2px;
 }
 
-.bid-button {
-    color: rgb(253, 253, 253);
-    background-color: #D64045;
+input[type=submit] {
+    color: white;
     border-radius: 5px;
     padding: 5px;
     padding-left: 10px;
     padding-right: 10px;
 }
 
+.bid-button {
+    background-color: #D64045;  
+}
 
 .watchlist-button {
-    color: white;
-    font-weight: 500;
-    font-size: medium;
     background-color: #467599;
-    border-radius: 5px;
-    padding: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
 }
 
 #listing-details,
@@ -201,10 +181,10 @@ label {
     padding-bottom: 1em;
 }
 
-#listing-description {
+#listing-description,
+.comment {
     font-style: italic;
 }
-
 
 .listing-comments-container {
     padding-top: 1em;
@@ -218,11 +198,6 @@ label {
     padding-bottom: 1em;
 }
 
-
-.comment {
-    font-style: italic;
-}
-
 #categories {
     padding-left: 4em;
     font-size: larger;
@@ -232,3 +207,16 @@ label {
     padding-bottom: 5px;
 }
 
+#description {
+    width: 70%;
+    height: 12em;
+    min-width: 0;
+    max-width: 400px;
+}
+
+#comment {
+    width: 70%;
+    height: 3em;
+    min-width: 0;
+    max-width: 400px;
+}

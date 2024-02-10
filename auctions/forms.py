@@ -12,10 +12,9 @@ class ListingForm(ModelForm):
             "min_bid": "Set min. bid"}
         widgets = {
             "description": Textarea(attrs={
-                "cols": 50, 
-                "rows": 5,
                 "placeholder": "Add description",
-                "class": "input"}),
+                "class": "input",
+                "id": "description"}),
             "title": TextInput(attrs={
                 "placeholder": "Add title",
                 "class": "input"}),
@@ -36,10 +35,9 @@ class CommentsForm(ModelForm):
         model = Comments
         fields = ["comment"]
         widgets = {"comment": Textarea(attrs={
-            "cols": 60, 
-            "rows": 2,
             "placeholder": "Comment here",
-            "class": "input"})}
+            "class": "input",
+            "id": "comment"})}
         labels = {"comment": ''}
 
 

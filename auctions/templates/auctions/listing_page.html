@@ -5,101 +5,103 @@ Listing Page
 {% endblock %}
 
 {% block body %}
-<div class="body">  
-    {% if listing.status == False and user == price.bidder %}
-        <h2 class="page-title">Congratulations, You won!</h2>
-    {% elif listing.status == False and user != price.bidder %}
-        <h2 class="page-title">Auction closed!</h2>
-    {% endif %}
-    
-    <div class="primary-container" id="listing-page-top-container">
-        <div class="listing-page-top-container-left">
-            <img id="listing-image" src="{{ listing.image_url }}" alt="listing_image">
-        </div>
-        <div class="listing-page-top-container-right">
-            <h2>{{ listing.title }}</h2>        
-    
-            {% if price and listing.status == True %}
-                <div class="larger"> Current Price: <strong>${{ price.amount }}</strong></div>
-            {% elif price and listing.status == False %}
-                <div class="larger">Sold for: <strong>${{ price.amount }}</strong></div>
-            {% else %}
-                <div class="larger"> Minimum price: <strong>${{ listing.min_bid }}</strong></div>
-                <div class="larger"> Current Price: No offers yet</div>
-            {% endif %}
-
-            {% if user.is_authenticated and listing.status == True %}
-                {% if user == listing.seller and listing.status == True %}
-                <form class="close-auction" action="{% url 'listing_page' listing.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="form_type" value="close_form">
-                    <input class="bid-button" type="submit" value="Close Auction">
-                </form>
-                {% else %}
-                <form action="{% url 'listing_page' listing.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="form_type" value="bid_form">
-                    <input class="input" type="number" step="0.01" name="new_bid" placeholder="Enter amount">
-                    <input type="submit" class="bid-button" value="Place Bid">
-                </form>
-                {% endif %}
-                {% if watched_listing %}
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="form_type" value="watchlist_form_remove">
-                    <input class="watchlist-button" type="submit" value="Remove from watchlist">
-                </form>
-                {% else %}
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="form_type" value="watchlist_form_add">
-                    <input class="watchlist-button" type="submit" value="Add to watchlist">
-                </form>
-                {% endif %}
-    
-            {% elif not user.is_authenticated and listing.status == True %}
-                <div class="larger-pink">Log In to Bid or Comment!</div>
-            {% endif %}
-        </div>
-    </div>
-    <div class="secondary-container" id="listing-details">Details
-        <table id="listing-details-container">  
-            <tr class="listing-details-container-row">
-                <td class="table-left-column">Description:</td>
-                <td class="table-right-column" id="listing-description">{{ listing.description }}</td>
-            </tr>
-            <tr class="listing-details-container-row">
-                <td class="table-left-column">Posted:</td>
-                <td class="table-right-column">{{ listing.date }}</td>
-            </tr>
-            <tr class="listing-details-container-row">
-                <td class="table-left-column">Seller:</td>
-                <td class="table-right-column">{{ listing.seller }}</td>
-            </tr>
-            <tr class="listing-details-container-row">
-                <td class="table-left-column">Category:</td> 
-                <td class="table-right-column">{{ listing.category }}</td>
-            </tr>
-        </table>
-    </div>  
-
-    <div class="primary-container" id="listing-comments">Comments
-        {% for comment in comments %}
-            <div class="listing-comments-container">
-                <div class="grey">User: {{ comment.user }}</div>
-                <div class="grey">{{ comment.date }}</div>
-                <div class="comment">{{ comment.comment }}</div>
-            </div> 
-        {% endfor %}
-    
-        {% if user.is_authenticated and listing.status == True %}
-            <form class="comments-form" action="{% url 'listing_page' listing.id %}" method="post">
-                {% csrf_token %}
-                {{ comment_f }}
-                <input class="input" type="hidden" name="form_type" value="comment_form">
-                <input class="watchlist-button" type="submit" value="Post">
-            </form>
+<div class="body"> 
+    <div class="wrapper">
+        {% if listing.status == False and user == price.bidder %}
+            <h2 class="page-title">Congratulations, You won!</h2>
+        {% elif listing.status == False and user != price.bidder %}
+            <h2 class="page-title">Auction closed!</h2>
         {% endif %}
+        
+        <div class="primary-container" id="listing-page-top-container">
+            <div class="listing-page-top-container-left">
+                <img id="listing-image" src="{{ listing.image_url }}" alt="listing_image">
+            </div>
+            <div class="listing-page-top-container-right">
+                <h2>{{ listing.title }}</h2>        
+        
+                {% if price and listing.status == True %}
+                    <div class="larger"> Current Price: <strong>${{ price.amount }}</strong></div>
+                {% elif price and listing.status == False %}
+                    <div class="larger">Sold for: <strong>${{ price.amount }}</strong></div>
+                {% else %}
+                    <div class="larger"> Minimum price: <strong>${{ listing.min_bid }}</strong></div>
+                    <div class="larger"> Current Price: No offers yet</div>
+                {% endif %}
+
+                {% if user.is_authenticated and listing.status == True %}
+                    {% if user == listing.seller and listing.status == True %}
+                    <form class="close-auction" action="{% url 'listing_page' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="close_form">
+                        <input class="bid-button" type="submit" value="Close Auction">
+                    </form>
+                    {% else %}
+                    <form action="{% url 'listing_page' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="bid_form">
+                        <input class="input" type="number" step="0.01" name="new_bid" placeholder="Enter amount">
+                        <input type="submit" class="bid-button" value="Place Bid">
+                    </form>
+                    {% endif %}
+                    {% if watched_listing %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="watchlist_form_remove">
+                        <input class="watchlist-button" type="submit" value="Remove from watchlist">
+                    </form>
+                    {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="watchlist_form_add">
+                        <input class="watchlist-button" type="submit" value="Add to watchlist">
+                    </form>
+                    {% endif %}
+        
+                {% elif not user.is_authenticated and listing.status == True %}
+                    <div class="larger-pink">Log In to Bid or Comment!</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="secondary-container" id="listing-details">Details
+            <table id="listing-details-container">  
+                <tr class="listing-details-container-row">
+                    <td class="table-left-column">Description:</td>
+                    <td class="table-right-column" id="listing-description">{{ listing.description }}</td>
+                </tr>
+                <tr class="listing-details-container-row">
+                    <td class="table-left-column">Posted:</td>
+                    <td class="table-right-column">{{ listing.date }}</td>
+                </tr>
+                <tr class="listing-details-container-row">
+                    <td class="table-left-column">Seller:</td>
+                    <td class="table-right-column">{{ listing.seller }}</td>
+                </tr>
+                <tr class="listing-details-container-row">
+                    <td class="table-left-column">Category:</td> 
+                    <td class="table-right-column">{{ listing.category }}</td>
+                </tr>
+            </table>
+        </div>  
+
+        <div class="primary-container" id="listing-comments">Comments
+            {% for comment in comments %}
+                <div class="listing-comments-container">
+                    <div class="grey">User: {{ comment.user }}</div>
+                    <div class="grey">{{ comment.date }}</div>
+                    <div class="comment">{{ comment.comment }}</div>
+                </div> 
+            {% endfor %}
+        
+            {% if user.is_authenticated and listing.status == True %}
+                <form class="comments-form" action="{% url 'listing_page' listing.id %}" method="post">
+                    {% csrf_token %}
+                    {{ comment_f }}
+                    <input class="input" type="hidden" name="form_type" value="comment_form">
+                    <input class="watchlist-button" type="submit" value="Post">
+                </form>
+            {% endif %}
+        </div>
     </div>
 </div>     
 {% endblock %}

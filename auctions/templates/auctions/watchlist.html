@@ -6,18 +6,20 @@ Watchlist
 
 {% block body %}
 <div class="body">
-    <div class="page-title">Your Watchlist</div>
-    <div class="grid">
-        {% for listing in listings %}
-        <a href="{% url 'listing_page' listing.id %}">
-        <div id="product" class="primary-container">
-            <img id="product-image" src="{{ listing.image_url }}" alt="listing_image">
-            <h4 id="product-title"> {{ listing.title}}</h4>
-            <div id="product-description" class="grey"> {{ listing.description }}</div>
-            <div id="product-price" class="larger">Price: ${{ listing.min_bid }}</div>
+    <div class="wrapper">
+        <div class="title-container">Your Watchlist</div>
+        <div class="grid">
+            {% for listing in listings %}
+            <a href="{% url 'listing_page' listing.id %}">
+            <div id="product" class="primary-container">
+                <img id="product-image" src="{{ listing.image_url }}" alt="listing_image">
+                <div id="product-title" class="larger"> {{ listing.title|upper }}</div>
+                <div id="product-description" class="grey"> {{ listing.description }}</div>
+                <div id="product-price" class="larger">From ${{ listing.min_bid }}</div>
+            </div>
+            </a>
+            {% endfor %}
         </div>
-        </a>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}

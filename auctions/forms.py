@@ -1,6 +1,5 @@
-from django.forms import ModelForm, Textarea, DecimalField
+from django.forms import ModelForm, Textarea, TextInput, NumberInput, Select
 from auctions.models import Listing, User, Bids, Categories, Comments, Watchlist
-from django import forms
 
 
 class ListingForm(ModelForm):
@@ -11,6 +10,24 @@ class ListingForm(ModelForm):
         labels = {
             "image_url": "Add image Url (optional)",
             "min_bid": "Set min. bid"}
+        widgets = {
+            "description": Textarea(attrs={
+                "cols": 50, 
+                "rows": 5,
+                "placeholder": "Add description",
+                "class": "input"}),
+            "title": TextInput(attrs={
+                "placeholder": "Add title",
+                "class": "input"}),
+            "image_url": TextInput(attrs={
+                "placeholder": "Add image URL",
+                "class": "input"}),
+            "min_bid": NumberInput(attrs={
+                "placeholder": "Add min. amount",
+                "class": "input"}),
+            "category": Select(attrs={
+                "class": "input"})
+                }
 
 
 class CommentsForm(ModelForm):
@@ -22,7 +39,7 @@ class CommentsForm(ModelForm):
             "cols": 60, 
             "rows": 2,
             "placeholder": "Comment here",
-            "id": "comment-input"})}
+            "class": "input"})}
         labels = {"comment": ''}
 
 

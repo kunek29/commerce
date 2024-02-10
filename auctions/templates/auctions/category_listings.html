@@ -2,15 +2,19 @@
 
 
 {% block body %}
-    <h2>{{ category }} Listings</h2>
-
-    {% for listing in listings %}
-    <a href="{% url 'listing_page' listing.id %}">
-    <div class="listing_box">
-        <div><img src="{{ listing.image_url }}"></div>
-        <div> {{ listing.title}}</div>
-        <div> {{ listing.min_bid }}$</div>
+<div class="body">
+    <div class="page-title"> {{ category }} Listings</div>
+    <div class="grid">
+        {% for listing in listings %}
+        <a href="{% url 'listing_page' listing.id %}">
+        <div class="product">
+            <img id="product-image" src="{{ listing.image_url }}" alt="listing_image">
+            <h4 id="product-title"> {{ listing.title}}</h4>
+            <div id="product-description" class="grey"> {{ listing.description }}</div>
+            <div id="product-price" class="larger">Price: ${{ listing.min_bid }}</div>
+        </div>
+        </a>
+        {% endfor %}
     </div>
-    </a>
-    {% endfor %}
+</div>
 {% endblock %}

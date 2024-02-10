@@ -5,9 +5,14 @@ Categories
 {% endblock %}
 
 {% block body %}
-    <h2>Categories</h2>
-    <ul>
-    {% for category in categories %}
-        <a href="{% url 'category_listings' category.id %}"><li>{{ category.category_list }}</li></a>
-    {% endfor %}
+    <div class="body">
+        <div class="title-container">Categories</div>
+        <ul class="primary-container" id="categories">
+            {% for category in categories %}
+            <a href="{% url 'category_listings' category.id %}"><li class="category">{{ category.category_list }}</li></a>
+            {% endfor %}
+        </UL>
+    </div>
+
+
 {% endblock %}

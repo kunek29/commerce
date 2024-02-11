@@ -21,54 +21,53 @@
             <span style="color:#D64045">s</span>
         </h1>
         
-        
-            <nav class="navbar navbar-expand-md" >
-                <div class="container-fluid">
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+        <nav class="navbar navbar-expand-md" >
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="{% url 'categories' %}">Categories</a>
+                        </li>
+                        {% if user.is_authenticated %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                                <a class="nav-link" href="{% url 'add_listing' %}">Add Listing</a>
                             </li>
-                            <li>
-                                <a class="nav-link" href="{% url 'categories' %}">Categories</a>
+                            <li class="nav-item">
+                                <a class="nav-link"  href="{% url 'watchlist' %}">Watchlist</a>
                             </li>
-                            {% if user.is_authenticated %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'add_listing' %}">Add Listing</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link"  href="{% url 'watchlist' %}">Watchlist</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                                </li>
-                            {% else %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'register' %}">Register</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'register' %}">Register</a>
+                            </li>
+                        {% endif %}
+                    </ul>
                 </div>
-                <div >
+                <div class="nav-end">
                     {% if user.is_authenticated %}
                         <div>Signed in as <strong>{{ user.username }}</strong></div>
                     {% else %}
                         <div>Not signed in.</div>
                     {% endif %}
                 </div>
-            </nav>
+            </div>
+        </nav>
         {% block body %}
         {% endblock %}
     </body>
-    <footer>
+    <footer class="wrapper">
         <div>About us</div>
         <div>Contact us</div>
         <div>Terms&Conditions</div>

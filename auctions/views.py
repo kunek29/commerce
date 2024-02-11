@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -116,7 +116,7 @@ def listing_page(request, listing_id):
         try: 
             bid = float(request.POST.get("new_bid"))
         except ValueError: 
-            return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
+            return HttpResponseBadRequest("Bad Request: provide a valid number")
 
         # Get last bid. If there's no prior one, set first to 0.
         price = Bids.objects.filter(listing_id=listing_id)
@@ -133,7 +133,7 @@ def listing_page(request, listing_id):
             bid.save()
             
         else:
-            return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
+            return HttpResponseBadRequest("Bad Request: too small amount")
 
         return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
         

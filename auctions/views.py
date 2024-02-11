@@ -103,13 +103,28 @@ def listing_page(request, listing_id):
     listing1 = Listing.objects.filter(pk=listing_id)
     listing = listing1.first()
 
+    # Add to a watchlist
+    if request.POST.get("form_type") == "watchlist_form_add":
+        try:
+            w = Watchlist(user=user)
+            w.save()
+            w.listing_id.add(listing)
+        except ValueError:
+            return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
+
+    # Remove from a watchlist
+    if request.POST.get("form_type") == "watchlist_form_remove":
+        w = Watchlist.objects.filter(listing_id=listing.id, user=user)
+        w.delete()
+
     # Check if listing is already in a watchlist
     w_listings = Listing.objects.filter(watchlist_listing__listing_id=listing_id, watchlist_listing__user=user.id)
     if listing in w_listings:
         watched_listing = True
     else:
         watched_listing = False
-    
+
+
     # Close listing
     if request.POST.get("form_type") == "close_form":
         listing.status = False
@@ -154,21 +169,7 @@ def listing_page(request, listing_id):
                 "message": "Amount too small"
             })
 
-        return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
-        
-    # Add to a watchlist
-    if request.POST.get("form_type") == "watchlist_form_add":
-        try:
-            w = Watchlist(user=user)
-            w.save()
-            w.listing_id.add(listing)
-        except ValueError:
-            return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
-
-    # Remove from a watchlist
-    if request.POST.get("form_type") == "watchlist_form_remove":
-        w = Watchlist.objects.filter(listing_id=listing.id, user=user)
-        w.delete()
+        return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))        
 
     # Add a comment
     if request.POST.get("form_type") == "comment_form":

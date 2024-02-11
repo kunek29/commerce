@@ -9,6 +9,8 @@ Listing Page
     <div class="wrapper">
         {% if listing.status == False and user == price.bidder %}
             <h2 class="title-container">Congratulations, You won!</h2>
+        {% elif listing.status == False and user == listing.seller %}
+            <h2 class="title-container">Winner is {{ price.bidder }}.</h2>
         {% elif listing.status == False and user != price.bidder %}
             <h2 class="title-container">Auction closed!</h2>
         {% endif %}

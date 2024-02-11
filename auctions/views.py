@@ -63,6 +63,10 @@ def register(request):
             return render(request, "auctions/register.html", {
                 "message": "Username already taken."
             })
+        except ValueError:
+            return render(request, "auctions/register.html", {
+                "message": "All fields required."
+            })
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
@@ -98,7 +102,15 @@ def listing_page(request, listing_id):
     # Get listing
     listing1 = Listing.objects.filter(pk=listing_id)
     listing = listing1.first()
+
+    # Check if listing is already in a watchlist
+    w_listings = Listing.objects.filter(watchlist_listing__listing_id=listing_id, watchlist_listing__user=user.id)
+    if listing in w_listings:
+        watched_listing = True
+    else:
+        watched_listing = False
     
+    # Close listing
     if request.POST.get("form_type") == "close_form":
         listing.status = False
         listing.save()
@@ -133,7 +145,14 @@ def listing_page(request, listing_id):
             bid.save()
             
         else:
-            return HttpResponseBadRequest("Bad Request: too small amount")
+            return render(request, "auctions/listing_page.html", {
+                "listing": listing,
+                "comment_f": CommentsForm(),
+                "watched_listing": watched_listing,
+                "comments": Comments.objects.filter(listing_id=listing_id),
+                "price": Bids.objects.filter(listing_id=listing_id).last(),
+                "message": "Amount too small"
+            })
 
         return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
         
@@ -159,13 +178,7 @@ def listing_page(request, listing_id):
             f.save()
         return HttpResponseRedirect(reverse('listing_page', args=(listing_id,)))
     
-    # Check if listing is already in a watchlist
-    w_listings = Listing.objects.filter(watchlist_listing__listing_id=listing_id, watchlist_listing__user=user.id)
-    if listing in w_listings:
-        watched_listing = True
-    else:
-        watched_listing = False
-    
+    # Render listing page
     return render(request, "auctions/listing_page.html", {
         "listing": listing,
         "comment_f": CommentsForm(),

@@ -7,8 +7,7 @@
             <div id="login" class="primary-container">
                 <div class="grey">Don't have an account? <a href="{% url 'register' %}">Register here.</a></div>  
                 <form action="{% url 'login' %}" method="post">
-                    {% csrf_token %}
-                    
+                    {% csrf_token %}             
                     <input autofocus class="input" type="text" name="username" placeholder="Username">
                     <br>
                     <input class="input" type="password" name="password" placeholder="Password">
@@ -16,12 +15,9 @@
                     <input class="bid-button" type="submit" value="Login">
                 </form>  
                 {% if message %}
-                    <div>{{ message }}</div>
+                    <div class="error">{{ message }}</div>
                 {% endif %}              
             </div>
         </div>
     </div>
-
-    
-
 {% endblock %}

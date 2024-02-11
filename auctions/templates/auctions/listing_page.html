@@ -30,32 +30,35 @@ Listing Page
                 {% endif %}
 
                 {% if user.is_authenticated and listing.status == True %}
+                    {% if message %}
+                        <div class="error">{{ message }}</div>
+                    {% endif %}
                     {% if user == listing.seller and listing.status == True %}
-                    <form class="close-auction" action="{% url 'listing_page' listing.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="form_type" value="close_form">
-                        <input class="bid-button" type="submit" value="Close Auction">
-                    </form>
+                        <form class="close-auction" action="{% url 'listing_page' listing.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_type" value="close_form">
+                            <input class="bid-button" type="submit" value="Close Auction">
+                        </form>
                     {% else %}
-                    <form action="{% url 'listing_page' listing.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="form_type" value="bid_form">
-                        <input class="input" type="number" step="0.01" name="new_bid" placeholder="Enter amount">
-                        <input type="submit" class="bid-button" value="Place Bid">
-                    </form>
+                        <form action="{% url 'listing_page' listing.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_type" value="bid_form">
+                            <input class="input" type="number" step="0.01" name="new_bid" placeholder="Enter amount">
+                            <input type="submit" class="bid-button" value="Place Bid">
+                        </form>
                     {% endif %}
                     {% if watched_listing %}
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="form_type" value="watchlist_form_remove">
-                        <input class="watchlist-button" type="submit" value="Remove from watchlist">
-                    </form>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_type" value="watchlist_form_remove">
+                            <input class="watchlist-button" type="submit" value="Remove from watchlist">
+                        </form>
                     {% else %}
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="form_type" value="watchlist_form_add">
-                        <input class="watchlist-button" type="submit" value="Add to watchlist">
-                    </form>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_type" value="watchlist_form_add">
+                            <input class="watchlist-button" type="submit" value="Add to watchlist">
+                        </form>
                     {% endif %}
         
                 {% elif not user.is_authenticated and listing.status == True %}

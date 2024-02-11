@@ -234,11 +234,19 @@ input[type=submit] {
     max-width: 400px;
 }
 
-#login {
+#login,
+#register {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    height: 300px;
-    
+}
+
+#login {height: 300px}
+#register {height: 400px}
+
+
+.error {
+    font-size: smaller;
+    color: red;
 }
